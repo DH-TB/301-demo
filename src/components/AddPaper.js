@@ -5,21 +5,7 @@ import '../less/paper.less';
 const {TextArea} = Input;
 const {Option} = Select;
 
-const homework = {
-    "items": [
-        {
-            "_id": "12345",
-            "title": "react",
-            "stack": "Javascript"
-        },
-        {
-            "_id": "12346",
-            "title": "jersey",
-            "stack": "Java+Gradle"
-        }
-    ],
-    "totalCount": 30
-}
+
 const paper = {
     "name": "react",
     "description": "考察react基础",

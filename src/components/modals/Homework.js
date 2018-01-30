@@ -1,52 +1,44 @@
 import React, {Component} from 'react';
 import {Table} from 'antd';
 
-const ShowModalHomework = ({sections, editModal, modalIndex, quizIndex}) => {
-    const columns = [
-        {
-            title: 'name',
-            dataIndex: 'name',
-        },
-        {
-            title: 'type',
-            dataIndex: 'type',
-        },
-        {
-            title: 'createTime',
-            dataIndex: 'createTime',
-        }];
-    const data = [
-        {
-            key: '1',
-            name: 'react',
-            type: 'Javascript',
-            createTime: '2018-1-1',
-        },
-        {
-            key: '2',
-            name: 'jersey',
-            type: 'Java+Gradle',
-            createTime: '2018-1-1',
-        }];
-    const rowSelection = {
-        type: 'radio',
-        onChange: (selectedRowsKeys, selectedRows) => {
-            sections.find((ele, index) => {
-                if (index === modalIndex) {
-                    if (editModal) {
-                        ele.content.splice(quizIndex, 1, selectedRows[0])
-                    }
-                    else {
-                        ele.content.push(selectedRows[0])
-                    }
-                }
-            });
-        }
-    };
+class ShowModalHomework extends Component {
+    constructor() {
+        super();
+    }
 
-    return (
-        <Table columns={columns} dataSource={data} rowSelection={rowSelection} pagination={false}/>
-    )
-};
+    componentWillMount() {
+        this.props.getHomework()
+    }
+
+    render() {
+        const {sections, editModal, modalIndex, quizIndex, homeworkQuiz} = this.props;
+
+        const columns = [
+            {
+                title: '名称',
+                dataIndex: 'title',
+                key: 'title',
+            },
+            {
+                title: '技术栈',
+                dataIndex: 'stack',
+                key: 'stack',
+            }];
+
+        const rowSelection = {
+            type: 'radio',
+            onChange: (selectedRowsKeys, selectedRows) => {
+                sections.find((ele, index) => {
+                    if (index === modalIndex) {
+                        editModal ? ele.content.splice(quizIndex, 1, selectedRows[0]) : ele.content.push(selectedRows[0])
+                    }
+                });
+            }
+        };
+        return (
+            <Table columns={columns} dataSource={homeworkQuiz.items} rowSelection={rowSelection} pagination={false}/>
+        )
+    }
+}
 
 export default ShowModalHomework

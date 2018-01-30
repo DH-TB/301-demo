@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {Card, Input, Modal, Col, Row, Radio, Icon, Popconfirm} from 'antd';
+import {connect} from 'react-redux';
+import {Card, Input, Modal, Col, Row, Radio, Icon, Popconfirm, message} from 'antd';
 import Homework from './modals/Homework';
 import Basic from './modals/Basic';
 import Subjective from './modals/Subjective';
-
+import * as actions from '../actions/app';
+import sectionType from '../constant/section-type';
 import imgQuiz from '../images/add.jpg'
 import imgSection from '../images/add.png';
 import '../less/common.less'
@@ -35,7 +37,18 @@ class AddSection extends Component {
     }
 
     handleOk() {
+        const currentType = this.state.sections.filter((s, i) => i === this.state.modalIndex)[0].type;
+        const subState = this.refs.subjective.state;
+        // const homeworkState = this.refs.homework.state;
+        // const basicState = this.refs.basic.state;
+        if (subState.subjectiveContent === '') {
+            message.warning('题目未填写');
+        }
+        else {
+            this.refs.subjective.pushSubjective();
+        }
         this.setState({visible: false, editModal: false});
+
     }
 
     handleCancel() {
@@ -91,14 +104,14 @@ class AddSection extends Component {
 
             const quiz = section.content.leading === 0 ? '' :
                 array.map((ele, quizIndex) => {
-                    const name = section.type === '编程题' ? ele.name : section.type === '主观题' ? ele : ele.description;
-                    const type = section.type === '编程题' ? ele.type : section.type === '主观题' ? section.type : ele.quizType;
+                    const name = section.type === '编程题' ? ele.title : section.type === '主观题' ? ele : ele.description;
+                    const type = section.type === '编程题' ? ele.stack : section.type === '主观题' ? section.type : ele.quizType;
                     return <div className='homework-card' key={quizIndex}>
                         <div className='homework-title'>{name}</div>
                         <div className='homework-content'>
                             <div className='row-type'>{type}</div>
                             <Row className='icon-group'>
-                                <Col offset={16} span={4}><Icon type="setting" className='icon-setting'
+                                <Col offset={14} span={4}><Icon type="setting" className='icon-setting'
                                                                 onClick={this.showModal.bind(this, index, quizIndex, 'edit')}/></Col>
                                 <Col span={4}><Icon type="delete" className='icon-delete'
                                                     onClick={this.deleteQuiz.bind(this, index, quizIndex)}/></Col>
@@ -151,18 +164,24 @@ class AddSection extends Component {
                     >
                         {
                             choosed.title === '编程题' ?
-                                <Homework sections={this.state.sections}
+                                <Homework ref={'homework'}
+                                          sections={this.state.sections}
                                           editModal={this.state.editModal}
                                           modalIndex={this.state.modalIndex}
                                           quizIndex={this.state.quizIndex}
+                                          getHomework={this.props.getHomework}
+                                          homeworkQuiz={this.props.homeworkQuiz}
+
                                 /> :
                                 choosed.title === '主观题' ?
-                                    <Subjective sections={this.state.sections}
+                                    <Subjective ref={'subjective'}
+                                                sections={this.state.sections}
                                                 editModal={this.state.editModal}
                                                 modalIndex={this.state.modalIndex}
                                                 quizIndex={this.state.quizIndex}
                                     /> :
-                                    <Basic sections={this.state.sections}
+                                    <Basic ref={'basic'}
+                                           sections={this.state.sections}
                                            editModal={this.state.editModal}
                                            modalIndex={this.state.modalIndex}
                                            quizIndex={this.state.quizIndex}
@@ -193,5 +212,16 @@ class AddSection extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        homeworkQuiz: state.homeworkQuiz
+    }
+};
 
-export default AddSection
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getHomework: () => dispatch(actions.getHomework())
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddSection)
