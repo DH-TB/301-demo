@@ -5,7 +5,6 @@ import Homework from './modals/Homework';
 import Basic from './modals/Basic';
 import Subjective from './modals/Subjective';
 import * as actions from '../actions/app';
-import sectionType from '../constant/section-type';
 import imgQuiz from '../images/add.jpg'
 import imgSection from '../images/add.png';
 import '../less/common.less'
@@ -38,16 +37,25 @@ class AddSection extends Component {
 
     handleOk() {
         const currentType = this.state.sections.filter((s, i) => i === this.state.modalIndex)[0].type;
-        const subState = this.refs.subjective.state;
-        // const homeworkState = this.refs.homework.state;
-        // const basicState = this.refs.basic.state;
-        if (subState.subjectiveContent === '') {
-            message.warning('题目未填写');
+        let subState, basicState = '';
+        if (currentType === '主观题') {
+            subState = this.refs.subjective.state;
+            if (subState.subjectiveContent === '') {
+                message.warning('题目未填写')
+            } else {
+                this.refs.subjective.pushSubjective();
+                this.setState({visible: false, editModal: false});
+            }
         }
-        else {
-            this.refs.subjective.pushSubjective();
+        if (currentType === '简单客观题') {
+            basicState = this.refs.basic.state;
+            if (basicState.basicAnswer === '' || basicState.basicDescription === '') {
+                message.warning('信息不完整');
+            } else {
+                this.refs.basic.pushBasic();
+                this.setState({visible: false, editModal: false});
+            }
         }
-        this.setState({visible: false, editModal: false});
 
     }
 

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Input, Col, Row, Radio, Checkbox} from 'antd';
+import {Input, Col, Row, Radio, Checkbox, message} from 'antd';
 import quizType from '../../constant/quiz-type';
+import quizOption from '../../constant/quiz-option';
 
 const RadioGroup = Radio.Group;
 const {TextArea} = Input;
@@ -12,16 +13,19 @@ class Basic extends Component {
         this.state = {
             basicQuizType: '填空题',
             basicDescription: '',
-            basicAnswer: ''
+            basicAnswer: '',
+            choiceOption: [],
+            optionValue: ''
         }
     }
 
     pushBasic() {
+        // this.state.basicAnswer.value.length !== 4 ? message.warning('信息不完整') : '';
         const {sections, editModal, modalIndex, quizIndex} = this.props;
         const content = {
             quizType: this.state.basicQuizType,
             description: this.state.basicDescription,
-            answer: [this.state.basicAnswer]
+            answer: this.state.basicAnswer
         };
         sections.find((ele, index) => {
             if (index === modalIndex) {
@@ -35,14 +39,63 @@ class Basic extends Component {
         this.setState({basicQuizType: e.target.value})
     }
 
-    mapRadio(defaultValue, editModal) {
+
+    chooseOption(option, index) {
+        const value = this.state.optionValue;
+        const length = this.state.choiceOption.filter((c, i) => c.option === option).length;
+        length === 0 ?
+            this.state.choiceOption.push({option, value})
+            :
+            this.state.choiceOption.splice(index, 1, {option, value});
+    }
+
+    saveAnswer(e) {
+        this.setState({basicAnswer: {key: e, value: this.state.choiceOption}});
+    }
+
+    mapQuizTypeRadio(defaultValue, editModal) {
+        const basicQuizType = defaultValue.quizType;
+
         return quizType.map((quiz, index) => {
-            const disable = editModal ? quiz !== defaultValue.quizType : false;
+            const disable = editModal ? quiz !== basicQuizType : false;
             return (
                 <Radio key={index} value={quiz} disabled={disable}>{quiz}</Radio>
             )
         });
+    }
 
+    mapQuizOptionRadio(defaultValue, editModal) {
+        return (
+            quizOption.map((option, index) => {
+                const value = editModal ? defaultValue.answer.value.filter((ele, index) => ele.option === option)[0].value : '';
+                return <Radio value={option} key={index}>
+                    <Input placeholder={'选项描述'}
+                           defaultValue={value}
+                           onBlur={this.chooseOption.bind(this, option, index)}
+                           onChange={e => {
+                               this.setState({optionValue: e.target.value})
+                           }}
+                    />
+                </Radio>
+            })
+        )
+    }
+
+    mapQuizOptionCheckbox(defaultValue, editModal) {
+        return (
+            quizOption.map((option, index) => {
+                const value = editModal ? defaultValue.answer.value.filter((ele, index) => ele.option === option)[0].value : '';
+                return <Checkbox value={option} key={index}>
+                    <Input placeholder={'选项描述'}
+                           defaultValue={value}
+                           onBlur={this.chooseOption.bind(this, option, index)}
+                           onChange={e => {
+                               this.setState({optionValue: e.target.value})
+                           }}
+                    />
+                </Checkbox>
+            })
+        )
     }
 
     render() {
@@ -53,12 +106,13 @@ class Basic extends Component {
                 defaultValue = editModal ? ele.content.filter((e, i) => i === quizIndex)[0] : ''
             }
         });
-        const basicQuizType = this.state.basicQuizType;
+        const basicQuizType = editModal ? defaultValue.quizType : this.state.basicQuizType;
+
         return (
             <div>
                 <Row>
                     <RadioGroup onChange={this.onChangeBasicQuizType.bind(this)} value={basicQuizType}>
-                        {this.mapRadio(defaultValue, editModal)}
+                        {this.mapQuizTypeRadio(defaultValue, editModal)}
                     </RadioGroup>
                 </Row>
 
@@ -79,22 +133,15 @@ class Basic extends Component {
                             <Input placeholder={'答案'}
                                    defaultValue={defaultValue.answer}
                                    onChange={e => this.setState({basicAnswer: e.target.value})}
-                                   onBlur={this.pushBasic.bind(this)}
                             />
                             :
                             basicQuizType === '单选题' ?
-                                <RadioGroup onChange={e => this.setState({basicAnswer: e.target.value})}>
-                                    <Radio value={'1'}><Input placeholder={'选项描述'}/></Radio>
-                                    <Radio value={'2'}><Input placeholder={'选项描述'}/></Radio>
-                                    <Radio value={'3'}><Input placeholder={'选项描述'}/></Radio>
-                                    <Radio value={'4'}><Input placeholder={'选项描述'}/></Radio>
+                                <RadioGroup onChange={this.saveAnswer.bind(this)}>
+                                    {this.mapQuizOptionRadio(defaultValue, editModal)}
                                 </RadioGroup>
                                 :
-                                <CheckboxGroup onChange={e => this.setState({basicAnswer: e.target.value})}>
-                                    <Checkbox value={'a'}><Input placeholder={'选项描述'}/></Checkbox>
-                                    <Checkbox value={'b'}><Input placeholder={'选项描述'}/></Checkbox>
-                                    <Checkbox value={'c'}><Input placeholder={'选项描述'}/></Checkbox>
-                                    <Checkbox value={'d'}><Input placeholder={'选项描述'}/></Checkbox>
+                                <CheckboxGroup onChange={this.saveAnswer.bind(this)}>
+                                    {this.mapQuizOptionCheckbox(defaultValue, editModal)}
                                 </CheckboxGroup>
                         }
                     </Col>
