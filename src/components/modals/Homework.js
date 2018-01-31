@@ -17,26 +17,35 @@ class ShowModalHomework extends Component {
             {
                 title: '名称',
                 dataIndex: 'title',
-                key: 'title',
+                key: '1',
             },
             {
                 title: '技术栈',
                 dataIndex: 'stack',
-                key: 'stack',
+                key: '2',
             }];
 
         const rowSelection = {
             type: 'radio',
-            onChange: (selectedRowsKeys, selectedRows) => {
+            onChange: (selectedRowsId, selectedRows) => {
                 sections.find((ele, index) => {
                     if (index === modalIndex) {
                         editModal ? ele.content.splice(quizIndex, 1, selectedRows[0]) : ele.content.push(selectedRows[0])
                     }
                 });
-            }
+            },
+            getCheckboxProps: record => ({
+                disabled: sections.filter((ele, index) => index === modalIndex)[0].content.includes(record)
+            })
         };
+
         return (
-            <Table columns={columns} dataSource={homeworkQuiz.items} rowSelection={rowSelection} pagination={false}/>
+            <Table columns={columns}
+                   dataSource={homeworkQuiz.items}
+                   rowKey={record => record.id}
+                   rowSelection={rowSelection}
+                   pagination={false}
+            />
         )
     }
 }

@@ -23,7 +23,7 @@ class AddSection extends Component {
             sections: [],
             modalIndex: 0,
             editModal: false,
-            quizType: '简单客观题',
+            quizType: '编程题',
             quizIndex: 0
         }
     }
@@ -47,7 +47,7 @@ class AddSection extends Component {
                 this.setState({visible: false, editModal: false});
             }
         }
-        if (currentType === '简单客观题') {
+        else if (currentType === '简单客观题') {
             basicState = this.refs.basic.state;
             if (basicState.basicAnswer === '' || basicState.basicDescription === '') {
                 message.warning('信息不完整');
@@ -56,7 +56,9 @@ class AddSection extends Component {
                 this.setState({visible: false, editModal: false});
             }
         }
-
+        else {
+            this.setState({visible: false, editModal: false});
+        }
     }
 
     handleCancel() {

@@ -1,12 +1,12 @@
 const homework = {
     "items": [
         {
-            "_id": "12345",
+            "id": "12345",
             "title": "react",
             "stack": "Javascript"
         },
         {
-            "_id": "12346",
+            "id": "12346",
             "title": "jersey",
             "stack": "Java+Gradle+Gradle+Gradle"
         },
