@@ -5,30 +5,6 @@ import '../less/paper.less';
 const {TextArea} = Input;
 const {Option} = Select;
 
-
-const paper = {
-    "name": "react",
-    "description": "考察react基础",
-    "sections": [
-        {
-            "type": "logicPuzzle",
-            "definition":
-                {
-                    "easy": 2,
-                    "normal": 3,
-                    "hard": 4
-                }
-        },
-        {
-            "type": "homeworkQuiz",
-            "title": "编程题",
-            "definition": {
-                "quizzes": ["12345"]
-            }
-        }
-    ]
-}
-
 class AddPaper extends Component {
     constructor() {
         super();
@@ -46,7 +22,7 @@ class AddPaper extends Component {
 
     handleChangeName(e) {
         const name = e.target.value;
-        const reg = new RegExp(/^[a-zA-Z0-9]{10}$/);
+        const reg = new RegExp(/^\w{10}$/);
         if (reg.test(name)) {
             message.warning('长度不能超过10位');
         } else {
@@ -56,12 +32,30 @@ class AddPaper extends Component {
 
     handleChangeDescription(e) {
         const description = e.target.value;
-        const reg = new RegExp(/^[a-zA-Z0-9]{20}$/);
+        const reg = new RegExp(/^\w{20}$/);
         if (reg.test(description)) {
-            message.warning('长度不能超过10位');
+            message.warning('长度不能超过20位');
         } else {
             this.setState({description})
         }
+    }
+
+    judgeNumber(value) {
+        const reg = new RegExp(/^\d+$/);
+        if (!reg.test(value)) {
+            message.warning('只能输入数字');
+        }
+    }
+
+    mapInputNumber() {
+        const array = ['简单', '一般', '困难'];
+        return array.map((ele, index) => {
+            return <span key={index}>{ele}
+                <InputNumber className='input-number' disabled={this.state.disable}
+                             onChange={this.judgeNumber.bind(this)}/>
+            </span>
+
+        })
     }
 
     render() {
@@ -99,9 +93,7 @@ class AddPaper extends Component {
                     </Col>
                 </Row>
                 <Row className='input-number-group'>
-                    简单 <InputNumber className='input-number' disabled={disable}/>
-                    一般<InputNumber className='input-number' disabled={disable}/>
-                    困难<InputNumber className='input-number' disabled={disable}/>
+                    {this.mapInputNumber()}
                 </Row>
             </Card>
         )

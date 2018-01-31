@@ -29,8 +29,8 @@ class Basic extends Component {
         };
         sections.find((ele, index) => {
             if (index === modalIndex) {
-                editModal ? ele.content.splice(quizIndex, 1, content)
-                    : ele.content.push(content);
+                editModal ?
+                    ele.content.splice(quizIndex, 1, content) : ele.content.push(content);
             }
         })
     }
@@ -44,9 +44,7 @@ class Basic extends Component {
         const value = this.state.optionValue;
         const length = this.state.choiceOption.filter((c, i) => c.option === option).length;
         length === 0 ?
-            this.state.choiceOption.push({option, value})
-            :
-            this.state.choiceOption.splice(index, 1, {option, value});
+            this.state.choiceOption.push({option, value}) : this.state.choiceOption.splice(index, 1, {option, value});
     }
 
     saveAnswer(e) {
@@ -55,7 +53,6 @@ class Basic extends Component {
 
     mapQuizTypeRadio(defaultValue, editModal) {
         const basicQuizType = defaultValue.quizType;
-
         return quizType.map((quiz, index) => {
             const disable = editModal ? quiz !== basicQuizType : false;
             return (
