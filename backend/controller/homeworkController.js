@@ -1,13 +1,12 @@
 import Homework from '../server/models/Homework';
+import result from './common';
 
 module.exports = {
-    get: (req, res, next) => {
+    getHomework: (req, res, next) => {
         Homework.findOne({},(err, data) => {
             if (err)
                 return next(err);
-            if (data) {
-                res.send(data)
-            }
+            result.handleNotFoundOrData(res,data);
         })
     }
 };

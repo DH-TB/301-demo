@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
+require('../tools/connect');
 
-const Paper = mongoose.model('Paper', {
+const PaperList = mongoose.model('PaperList', {
     name: String,
     description: String,
-    sections: [
-        {
-            type: String,
-            title: String,
-            definition: {}
-        }
-    ]
+    sections: [{
+        title: String,
+        types: String,
+        index:Number,
+        content:[]
+    }]
 });
 
-module.exports = Paper;
+module.exports = PaperList;

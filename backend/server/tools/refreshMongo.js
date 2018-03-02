@@ -1,19 +1,17 @@
 import mongoose from 'mongoose';
 import rawData from './initData';
-import Paper from '../models/Paper';
+import PaperList from '../models/Paper';
 import Homework from '../models/Homework';
 mongoose.Promise = require('bluebird');
+require('./connect');
 
 const modelsMap = {
-    Paper,
+    PaperList,
     Homework,
 };
-
 let docs = Object.keys(rawData);
 
 console.log(docs);
-
-mongoose.connect('mongodb://127.0.0.1:27017/paper');
 
 Object.keys(rawData).forEach(v => {
     modelsMap[v].remove(()=> {

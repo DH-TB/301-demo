@@ -1,29 +1,65 @@
 export default {
-    Paper: [
+    PaperList:
         {
             "name": "react",
             "description": "考察react基础",
             "sections": [
                 {
-                    "type": "logicPuzzle",
-                    "definition": {
-                        "easy": 2,
-                        "normal": 3,
-                        "hard": 4
-                    }
+                    "title": "主观题ww",
+                    "types": "主观题",
+                    "index": 0,
+                    "content": ["主观题的描述"]
                 },
                 {
-                    "type": "homeworkQuiz",
-                    "title": "编程题",
-                    "definition": {
-                        "quizzes": [
-                            "12345"
-                        ]
-                    }
-                }
-            ]
-        }
-    ],
+                    "title": "编程题11",
+                    "types": "编程题",
+                    "index": 1,
+                    "content": [{
+                        "id": "12345",
+                        "title": "react",
+                        "stack": "Javascript"
+                    }]
+                },
+                {
+                    "title": "简单客观题123",
+                    "types": "简单客观题",
+                    "index": 2,
+                    "content": [
+                        {
+                            "quizType": "填空题",
+                            "description": "12",
+                            "answer": "12"
+                        },
+                        {
+                            "quizType": "单选题",
+                            "description": "13",
+                            "answer": {
+                                "key": ["C"],
+                                "value": [
+                                    {"option": "A", "value": "2"},
+                                    {"option": "B", "value": "4"},
+                                    {"option": "C", "value": "5"},
+                                    {"option": "D", "value": "6"}
+                                ]
+                            }
+                        },
+                        {
+                            "quizType": "多选题",
+                            "description": "14",
+                            "answer": {
+                                "key": ["C", "D"],
+                                "value": [
+                                    {"option": "A", "value": "2"},
+                                    {"option": "B", "value": "4"},
+                                    {"option": "C", "value": "5"},
+                                    {"option": "D", "value": "6"}
+                                ]
+                            }
+                        }
+                    ]
+                },
+            ],
+        },
     Homework: {
         "items": [
             {

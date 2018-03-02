@@ -1,49 +1,48 @@
 import Paper from '../server/models/Paper';
+import result from './common';
 
 module.exports = {
+    addPaper: (req, res, next) => {
+        const paper = new Paper(req.body);
+        paper.save((err, data) => {
+            if (err)
+                return next(err);
+            if (data) {
+                res.sendStatus(201)
+            }
+        })
+    },
     getAll: (req, res, next) => {
-        Paper.findOne({}, (err, data) => {
+        Paper.find({}, (err, data) => {
             if (err)
                 return next(err);
-            if (data) {
-                res.send(data)
-            }
+           result.handleNotFoundOrData(res,data)
         })
     },
-    post: (req, res, next) => {
-        Paper.findOne({}, (err, data) => {
+    getOne: (req, res, next) => {
+        const id = req.params.id;
+        Paper.findOne({_id: id}, (err, data) => {
             if (err)
                 return next(err);
-            if (data) {
-                res.send(data)
-            }
+            result.handleNotFoundOrData(res,data)
         })
     },
-    get: (req, res, next) => {
-        Paper.findOne({}, (err, data) => {
+    deletePaper: (req, res, next) => {
+        const id = req.params.id;
+        Paper.findOneAndRemove({_id: id}, (err, data) => {
             if (err)
                 return next(err);
-            if (data) {
-                res.send(data)
-            }
+            result.handleNotFoundOrNoContent(res,data)
         })
     },
-    put: (req, res, next) => {
-        Paper.findOne({}, (err, data) => {
+    updatePaper: (req, res, next) => {
+        const id = req.params.id;
+        Paper.update({_id: id}, {
+            name:req.body.name
+            }, (err, data) => {
             if (err)
                 return next(err);
-            if (data) {
-                res.send(data)
-            }
-        })
-    },
-    del: (req, res, next) => {
-        Paper.findOne({}, (err, data) => {
-            if (err)
-                return next(err);
-            if (data) {
-                res.send(data)
-            }
+            result.handleNotFoundOrNoContent(res,data)
         })
     }
 };

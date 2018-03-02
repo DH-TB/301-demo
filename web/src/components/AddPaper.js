@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Card, Input, InputNumber, Col, Row, Checkbox, message, Select} from 'antd';
-import * as actions from '../actions/app';
-
 import '../less/paper.less';
 
 const {TextArea} = Input;
@@ -16,14 +13,6 @@ class AddPaper extends Component {
             name: '',
             description: '',
         }
-    }
-
-    getPaper() {
-        console.log(this.state);
-    }
-
-    componentDidMount(){
-        this.props.getProgram()
     }
 
     handleChangeName(e) {
@@ -64,6 +53,17 @@ class AddPaper extends Component {
         })
     }
 
+    programOption() {
+        const array = [{id: 1, value: "Hello"}, {id: 2, value: "Jack"}, {id: 3, value: "Luck"}];
+        return <Select defaultValue="Hello" style={{width: 560}}>
+            {
+                array.map((a, index) => {
+                    return <Option key={index} value={a.id}>{a.value}</Option>
+                })
+            }
+        </Select>
+    }
+
     render() {
         const disable = this.state.disable;
         return (
@@ -83,11 +83,7 @@ class AddPaper extends Component {
                 <Row className='margin-t-2'>
                     <Col offset={6} span={2}>program</Col>
                     <Col span={10}>
-                        <Select defaultValue="hello" style={{width: 560}}>
-                            <Option value="hello">hello</Option>
-                            <Option value="jack">Jack</Option>
-                            <Option value="lucy">Lucy</Option>
-                        </Select>
+                        {this.programOption()}
                     </Col>
                 </Row>
                 <Row className='margin-t-2'>
@@ -107,16 +103,4 @@ class AddPaper extends Component {
 }
 
 
-const mapStateToProps = state => {
-    return {
-        // homeworkQuiz: state.homeworkQuiz
-    }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getProgram: () => dispatch(actions.getProgram())
-    }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddPaper)
+export default (AddPaper)

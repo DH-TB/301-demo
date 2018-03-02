@@ -1,15 +1,16 @@
 import express from 'express';
-const router = express.Router();
 import homework from '../../controller/homeworkController';
 import paper from '../../controller/paperController';
 
-router.get('/api/homeworkDefinitions',homework.get());
+const router = express.Router();
 
-router.get('/api/papers',paper.getAll());
-router.get('/api/papers/:id',paper.get());
-router.post('/api/papers/:id',paper.post());
-router.put('/api/papers/:id',paper.put());
-router.delete('/api/papers/:id',paper.del());
+router.get('/api/homeworkDefinitions',homework.getHomework);
+router.post('/api/paper',paper.addPaper);
+
+router.get('/api/papers',paper.getAll);
+router.get('/api/papers/:id',paper.getOne);
+router.put('/api/papers/:id',paper.updatePaper);
+router.delete('/api/papers/:id',paper.deletePaper);
 
 module.exports = router;
 
